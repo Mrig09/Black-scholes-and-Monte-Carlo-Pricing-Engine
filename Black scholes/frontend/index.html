@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quant Pricing Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="control-panel">
+      <h1>Quant Engine</h1>
+      <p class="subtitle">Black-Scholes · Monte Carlo · Diagnostics</p>
+
+      <div class="form-grid" id="inputForm">
+        <label>Spot Price (S₀)<input type="number" id="spot" value="100" min="0.0001" step="0.1" /></label>
+        <label>Strike (K)<input type="number" id="strike" value="100" min="0.0001" step="0.1" /></label>
+        <label>Maturity (T, years)<input type="number" id="maturity" value="1" min="0.0001" step="0.01" /></label>
+        <label>Risk-free rate (r)<input type="number" id="rate" value="0.05" step="0.001" /></label>
+        <label>Volatility (σ)<input type="number" id="volatility" value="0.2" min="0.0001" step="0.001" /></label>
+        <label>MC Paths (N)<input type="number" id="mcPaths" value="100000" min="1000" step="1000" /></label>
+        <label>Option Type
+          <select id="optionType">
+            <option value="call" selected>Call</option>
+            <option value="put">Put</option>
+          </select>
+        </label>
+        <label>Market Price (for IV)<input type="number" id="marketPrice" value="10" min="0.0001" step="0.01" /></label>
+      </div>
+
+      <details class="advanced-settings">
+        <summary>Advanced Settings</summary>
+        <div class="form-grid advanced-grid">
+          <label>Random Seed<input type="number" id="seed" value="42" step="1" /></label>
+          <label>Bump Size (ε)<input type="number" id="bumpSize" value="0.01" min="0.000001" step="0.001" /></label>
+          <label>Tolerance<input type="number" id="tolerance" value="0.000001" min="0.000000001" step="0.000001" /></label>
+          <label>Variance Reduction
+            <select id="antithetic">
+              <option value="true" selected>Antithetic</option>
+              <option value="false">None</option>
+            </select>
+          </label>
+        </div>
+      </details>
+
+      <div class="actions">
+        <button id="btnPrice">Price Option</button>
+        <button id="btnConvergence">Run Convergence Test</button>
+        <button id="btnGreeks">Compute Greeks</button>
+        <button id="btnImpliedVol">Solve Implied Vol</button>
+      </div>
+      <div id="status" class="status idle">Idle</div>
+      <ul id="warnings"></ul>
+    </aside>
+
+    <main class="dashboard-workspace">
+      <section class="summary-panel">
+        <div class="metric"><span>Black-Scholes Price</span><strong id="bsPrice">-</strong></div>
+        <div class="metric"><span>Monte Carlo Price</span><strong id="mcPrice">-</strong></div>
+        <div class="metric"><span>95% CI</span><strong id="ci">-</strong></div>
+        <div class="metric"><span>Absolute Error</span><strong id="errorVsBs">-</strong></div>
+        <div class="metric"><span>Standard Error</span><strong id="stdError">-</strong></div>
+        <div class="metric"><span>Runtime</span><strong id="runtimeMetric">-</strong></div>
+        <div class="metric"><span>Iterations</span><strong id="iterations">-</strong></div>
+      </section>
+
+      <nav class="tab-bar" aria-label="dashboard tabs">
+        <button class="tab-btn active" data-tab="pricing">Pricing</button>
+        <button class="tab-btn" data-tab="convergence">Convergence</button>
+        <button class="tab-btn" data-tab="greeks">Greeks</button>
+        <button class="tab-btn" data-tab="iv">Implied Vol</button>
+      </nav>
+
+      <section class="tab-panels">
+        <article class="tab-panel active" id="panel-pricing">
+          <div class="chart-main chart-card"><h3>Price vs Spot (BS vs MC)</h3><canvas id="spotCurveChart"></canvas></div>
+          <div class="chart-secondary chart-card"><h3>Confidence Interval View</h3><canvas id="ciChart"></canvas></div>
+        </article>
+
+        <article class="tab-panel" id="panel-convergence">
+          <div class="chart-main chart-card"><h3>Monte Carlo Convergence (log-log)</h3><canvas id="convergenceChart"></canvas></div>
+          <div class="chart-secondary chart-card"><h3>Runtime vs Paths</h3><canvas id="runtimeChart"></canvas></div>
+        </article>
+
+        <article class="tab-panel" id="panel-greeks">
+          <div class="chart-card chart-main">
+            <div class="card-title-row">
+              <h3>Greeks vs Spot (Analytical vs Numerical)</h3>
+              <div class="greek-switch" role="tablist" aria-label="greek selector">
+                <button class="greek-btn active" data-greek="delta">Delta</button>
+                <button class="greek-btn" data-greek="gamma">Gamma</button>
+                <button class="greek-btn" data-greek="vega">Vega</button>
+              </div>
+            </div>
+            <canvas id="greeksChart"></canvas>
+          </div>
+          <div class="chart-secondary chart-card"><h3>|Analytical - Numerical| Error</h3><canvas id="greeksErrorChart"></canvas></div>
+        </article>
+
+        <article class="tab-panel" id="panel-iv">
+          <div class="chart-main chart-card"><h3>Implied Volatility Solver Trace</h3><canvas id="ivTraceChart"></canvas></div>
+          <div class="chart-secondary chart-card"><h3>Residual by Iteration</h3><canvas id="ivResidualChart"></canvas></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

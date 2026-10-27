@@ -1,0 +1,271 @@
+:root {
+  --bg: #0b1118;
+  --panel: #111a24;
+  --card: #152231;
+  --border: #2b3b4d;
+  --text: #dbe7f3;
+  --muted: #8aa0b8;
+  --accent: #57c2ff;
+  --accent-2: #6dd3a0;
+  --warning: #ffc46b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(1200px 500px at 10% 0%, #16273a 0%, transparent 70%),
+    radial-gradient(900px 400px at 90% 100%, #172a22 0%, transparent 65%),
+    var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(300px, 28vw) 1fr;
+}
+
+.control-panel {
+  background: linear-gradient(180deg, #111a24 0%, #0f1721 100%);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.control-panel h1 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.advanced-settings {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(17, 28, 40, 0.7);
+  margin-bottom: 10px;
+}
+
+.advanced-settings summary {
+  padding: 10px;
+  cursor: pointer;
+  color: #b7c7d9;
+  font-size: 0.82rem;
+}
+
+.advanced-grid {
+  padding: 0 10px 10px;
+  margin: 0;
+}
+
+label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input,
+select,
+button {
+  border: 1px solid var(--border);
+  background: #0b121b;
+  color: var(--text);
+  border-radius: 6px;
+  padding: 9px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.84rem;
+}
+
+.actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+button {
+  cursor: pointer;
+  background: linear-gradient(180deg, #1b2d40, #152432);
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.status {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  padding: 7px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.status.loading {
+  color: var(--accent);
+}
+
+.status.error {
+  color: #ff8f8f;
+}
+
+#warnings {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--warning);
+  font-size: 0.8rem;
+}
+
+.dashboard-workspace {
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+  grid-template-rows: auto auto 1fr;
+  min-height: 0;
+}
+
+.summary-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  background: rgba(21, 34, 49, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.metric span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+}
+
+.metric strong {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.05rem;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.tab-btn,
+.greek-btn {
+  border: 1px solid var(--border);
+  background: #111d29;
+  color: #b7c7d9;
+  padding: 8px 12px;
+  border-radius: 7px;
+}
+
+.tab-btn.active,
+.greek-btn.active {
+  color: #07111a;
+  background: linear-gradient(180deg, #76d4ff, #57c2ff);
+  border-color: #57c2ff;
+}
+
+.tab-panels {
+  min-height: 0;
+}
+
+.tab-panel {
+  display: none;
+  grid-template-rows: minmax(0, 1fr) 170px;
+  gap: 10px;
+  height: 100%;
+}
+
+.tab-panel.active {
+  display: grid;
+}
+
+.chart-card {
+  background: rgba(21, 34, 49, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card h3 {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  color: #b7c7d9;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.greek-switch {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.chart-card canvas {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1080px) {
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .control-panel {
+    position: static;
+    height: auto;
+  }
+
+  .dashboard-workspace {
+    grid-template-rows: auto auto auto;
+  }
+
+  .tab-panel,
+  .tab-panel.active {
+    display: grid;
+    grid-template-rows: 360px 220px;
+    height: auto;
+  }
+}
